@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ex8 Image Browser</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #d0d8d7;
+      margin: 0;
+      padding: 50px;
+    }
+
+    .gallery-title {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 30px;
+      color: #307665;
+    }
+
+    .thumbnail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      gap: 30px;
+      justify-content: flex-start;
+    }
+
+    .thumbnail-container {
+      margin: 0;
+    }
+
+    .thumbnail {
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: transform 0.1s ease-in-out;
+      box-shadow: 0 3px 6px rgba(12, 12, 12, 0.3);
+      position: relative;
+      z-index: 2;
+    }
+
+    .thumbnail:hover {
+      transform: scale(1.1);
+      box-shadow: 0 5px 15px rgba(12, 12, 12, 0.3);
+    }
+
+    .fullsize {
+      display: none;
+      margin: 0 auto;
+      border-radius: 15px;
+      box-shadow: 0 0 50px rgba(12, 12, 12, 0.3);
+    }
+
+    .fullsize.active {
+      display: block;
+    }
+
+    .display-container {
+      text-align: center;
+      position: relative;
+      margin-top: -400px;
+    }
+
+    .arrow {
+      cursor: pointer;
+      position: absolute;
+      top: 150px;
+      font-size: 50px;
+      color: #307665;
+      transition: color 0.3s;
+      z-index: 1;
+    }
+
+    .arrow.left {
+      left: 450px;
+    }
+
+    .arrow.right {
+      right: 450px;
+    }
+
+    .arrow:hover {
+      color: #000000;
+      border-color: #307665;
+    }
+
+    .selected-image {
+      display: inline-block;
+    }
+
+  </style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel">
+  function ImageBrowser() {
+    const galleryImages = [
+      {
+        thumbnail: 'https://picsum.photos/id/31/100/100',
+        fullsize: 'https://picsum.photos/id/31/350/350'
+      },
+      {
+        thumbnail: 'https://picsum.photos/id/39/100/100',
+        fullsize: 'https://picsum.photos/id/39/350/350'
+      },
+      {
+        thumbnail: 'https://picsum.photos/id/237/100/100',
+        fullsize: 'https://picsum.photos/id/237/350/350'
+      },
+      {
+        thumbnail: 'https://picsum.photos/id/282/100/100',
+        fullsize: 'https://picsum.photos/id/282/350/350'
+      },
+      {
+        thumbnail: 'https://picsum.photos/id/76/100/100',
+        fullsize: 'https://picsum.photos/id/76/350/350'
+      },
+      {
+        thumbnail: 'https://picsum.photos/id/91/100/100',
+        fullsize: 'https://picsum.photos/id/91/350/350'
+      },
+      {
+        thumbnail: 'https://picsum.photos/id/113/100/100',
+        fullsize: 'https://picsum.photos/id/113/350/350'
+      },
+      {
+        thumbnail: 'https://picsum.photos/id/145/100/100',
+        fullsize: 'https://picsum.photos/id/145/350/350'
+      },
+      {
+        thumbnail: 'https://picsum.photos/id/206/100/100',
+        fullsize: 'https://picsum.photos/id/206/350/350'
+      },
+      {
+        thumbnail: 'https://picsum.photos/id/203/100/100',
+        fullsize: 'https://picsum.photos/id/203/350/350'
+      },
+      {
+        thumbnail: 'https://picsum.photos/id/208/100/100',
+        fullsize: 'https://picsum.photos/id/208/350/350'
+      }
+    ];
+
+    const [activeIndex, setActiveIndex] = React.useState(null);
+
+    const showNextImage = () => {
+      setActiveIndex((prevIndex) => (prevIndex + 1) % galleryImages.length);
+    };
+
+    const showPreviousImage = () => {
+      setActiveIndex((prevIndex) =>
+        prevIndex === 0 ? galleryImages.length - 1 : prevIndex - 1
+      );
+    };
+
+    return (
+      <div>
+        <div className="gallery-title">The Gallery</div>
+        <div className="container">
+          <div className="thumbnail-grid">
+            {galleryImages.map((image, index) => (
+              <div key={index} className="thumbnail-container">
+                <img
+                  src={image.thumbnail}
+                  alt={`Thumbnail ${index}`}
+                  className="thumbnail"
+                  onClick={() => setActiveIndex(index)}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="display-container">
+            <span className="arrow left" onClick={showPreviousImage}>
+              &#9664;
+            </span>
+            <div className="selected-image">
+              <img
+                src={galleryImages[activeIndex]?.fullsize}
+                alt={`Fullsize ${activeIndex}`}
+                className={`fullsize ${activeIndex !== null ? 'active' : ''}`}
+              />
+            </div>
+            <span className="arrow right" onClick={showNextImage}>
+              &#9654;
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  ReactDOM.render(
+    <React.StrictMode>
+      <ImageBrowser />
+    </React.StrictMode>,
+    document.getElementById('root')
+  );
+</script>
+
+</body>
+</html>
